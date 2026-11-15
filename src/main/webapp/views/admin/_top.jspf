@@ -1,0 +1,16 @@
+<%@ page pageEncoding="UTF-8" %>
+<div class="app">
+    <header class="topbar">
+        <strong>Dashboard</strong>
+        <span>Xin chào ${sessionScope.account.fullname}
+            &nbsp; | &nbsp;
+            <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+        </span>
+    </header>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="admin-label">Quản trị</div>
+            <a href="${pageContext.request.contextPath}/admin/category/list">Quản lý danh mục</a>
+            <a href="${pageContext.request.contextPath}/admin/category/add">Thêm danh mục mới</a>
+        </aside>
+        <main class="content">
