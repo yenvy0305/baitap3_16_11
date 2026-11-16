@@ -15,6 +15,12 @@
     <c:if test="${param.registered eq '1'}">
         <div class="success">Đăng ký thành công. Hãy đăng nhập.</div>
     </c:if>
+    <c:if test="${param.activated eq '1'}">
+        <div class="success">Kích hoạt tài khoản thành công. Hãy đăng nhập.</div>
+    </c:if>
+    <c:if test="${param.passwordReset eq '1'}">
+        <div class="success">Đổi mật khẩu thành công. Hãy đăng nhập bằng mật khẩu mới.</div>
+    </c:if>
 
     <c:if test="${not empty alert}">
         <div class="alert">${alert}</div>
@@ -42,6 +48,8 @@
 
         <button type="submit">Đăng nhập</button>
     </form>
+
+    <p><a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a></p>
 
     <p>Chưa có tài khoản?
        <a href="${pageContext.request.contextPath}/register">Đăng ký</a>

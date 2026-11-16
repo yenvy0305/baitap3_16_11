@@ -64,7 +64,7 @@ public class LoginController extends HttpServlet {
         User user = service.login(username.trim(), password);
 
         if (user == null) {
-            req.setAttribute("alert", "Tài khoản hoặc mật khẩu không đúng.");
+            req.setAttribute("alert", "Thông tin đăng nhập không đúng hoặc tài khoản chưa được kích hoạt.");
             req.setAttribute("rememberedUsername", username.trim());
             req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
             return;
@@ -86,7 +86,9 @@ public class LoginController extends HttpServlet {
             resp.addCookie(cookie);
         }
 
-        req.getSession(true).setAttribute("account", user);
+        HttpSession authenticatedSession = req.getSession(true);
+        req.changeSessionId();
+        authenticatedSession.setAttribute("account", user);
         routeByRole(req, resp, user);
     }
 

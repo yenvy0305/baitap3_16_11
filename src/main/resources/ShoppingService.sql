@@ -25,9 +25,32 @@ BEGIN
         avatar NVARCHAR(255) NULL,
         roleid INT NOT NULL DEFAULT 5,
         phone NVARCHAR(30) NULL,
-        createdDate DATETIME2 NOT NULL DEFAULT SYSDATETIME()
+        createdDate DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        isActive BIT NOT NULL CONSTRAINT DF_Users_isActive DEFAULT 1,
+        activationCodeHash NVARCHAR(255) NULL,
+        activationExpiresAt DATETIME2 NULL,
+        resetCodeHash NVARCHAR(255) NULL,
+        resetExpiresAt DATETIME2 NULL
     );
 END;
+GO
+
+-- Bổ sung các cột cho database đã được tạo trước đó.
+IF COL_LENGTH(N'dbo.Users', N'isActive') IS NULL
+    ALTER TABLE dbo.Users ADD isActive BIT NOT NULL
+        CONSTRAINT DF_Users_isActive_Migration DEFAULT 1 WITH VALUES;
+GO
+IF COL_LENGTH(N'dbo.Users', N'activationCodeHash') IS NULL
+    ALTER TABLE dbo.Users ADD activationCodeHash NVARCHAR(255) NULL;
+GO
+IF COL_LENGTH(N'dbo.Users', N'activationExpiresAt') IS NULL
+    ALTER TABLE dbo.Users ADD activationExpiresAt DATETIME2 NULL;
+GO
+IF COL_LENGTH(N'dbo.Users', N'resetCodeHash') IS NULL
+    ALTER TABLE dbo.Users ADD resetCodeHash NVARCHAR(255) NULL;
+GO
+IF COL_LENGTH(N'dbo.Users', N'resetExpiresAt') IS NULL
+    ALTER TABLE dbo.Users ADD resetExpiresAt DATETIME2 NULL;
 GO
 
 UPDATE dbo.Users

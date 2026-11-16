@@ -23,7 +23,7 @@
         <label>Số điện thoại</label>
         <input name="phone">
         <label>Mật khẩu</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" minlength="8" required>
         <button type="submit">Đăng ký</button>
     </form>
     <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>

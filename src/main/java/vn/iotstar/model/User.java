@@ -45,6 +45,21 @@ public class User implements Serializable {
     @Column(name = "createdDate", nullable = false)
     private Timestamp createdDate;
 
+    @Column(name = "isActive", nullable = false)
+    private boolean active = true;
+
+    @Column(name = "activationCodeHash", length = 255)
+    private String activationCodeHash;
+
+    @Column(name = "activationExpiresAt")
+    private Timestamp activationExpiresAt;
+
+    @Column(name = "resetCodeHash", length = 255)
+    private String resetCodeHash;
+
+    @Column(name = "resetExpiresAt")
+    private Timestamp resetExpiresAt;
+
     public User() {
     }
 
@@ -118,5 +133,45 @@ public class User implements Serializable {
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getActivationCodeHash() {
+        return activationCodeHash;
+    }
+
+    public void setActivationCodeHash(String activationCodeHash) {
+        this.activationCodeHash = activationCodeHash;
+    }
+
+    public Timestamp getActivationExpiresAt() {
+        return activationExpiresAt;
+    }
+
+    public void setActivationExpiresAt(Timestamp activationExpiresAt) {
+        this.activationExpiresAt = activationExpiresAt;
+    }
+
+    public String getResetCodeHash() {
+        return resetCodeHash;
+    }
+
+    public void setResetCodeHash(String resetCodeHash) {
+        this.resetCodeHash = resetCodeHash;
+    }
+
+    public Timestamp getResetExpiresAt() {
+        return resetExpiresAt;
+    }
+
+    public void setResetExpiresAt(Timestamp resetExpiresAt) {
+        this.resetExpiresAt = resetExpiresAt;
     }
 }

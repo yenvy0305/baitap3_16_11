@@ -26,6 +26,22 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void update(User user) {
+        EntityManager em = JpaConfig.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(user);
+            tx.commit();
+        } catch (RuntimeException e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public User findByUsername(String username) {
         EntityManager em = JpaConfig.getEntityManager();
         try {
@@ -36,6 +52,21 @@ public class UserDaoImpl implements UserDao {
                 .setMaxResults(1)
                 .getResultList();
 
+            return results.isEmpty() ? null : results.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        EntityManager em = JpaConfig.getEntityManager();
+        try {
+            var results = em.createQuery(
+                    "SELECT u FROM User u WHERE u.email = :email", User.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getResultList();
             return results.isEmpty() ? null : results.get(0);
         } finally {
             em.close();
