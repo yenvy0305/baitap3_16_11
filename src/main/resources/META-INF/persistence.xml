@@ -11,6 +11,7 @@
 
         <class>vn.iotstar.model.User</class>
         <class>vn.iotstar.model.Category</class>
+        <class>vn.iotstar.model.Video</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>

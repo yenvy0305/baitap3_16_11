@@ -56,3 +56,19 @@ GO
 UPDATE dbo.Users
 SET roleid = 1
 WHERE username = N'admin';
+
+IF OBJECT_ID(N'dbo.Videos', N'U') IS NULL
+BEGIN
+    CREATE TABLE dbo.Videos (
+        video_id INT IDENTITY(1,1) PRIMARY KEY,
+        title NVARCHAR(255) NOT NULL,
+        description NVARCHAR(MAX) NULL,
+        file_name NVARCHAR(255) NOT NULL UNIQUE,
+        mime_type NVARCHAR(100) NOT NULL,
+        created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        user_id INT NOT NULL,
+        CONSTRAINT FK_Videos_Users FOREIGN KEY (user_id)
+            REFERENCES dbo.Users(id) ON DELETE CASCADE
+    );
+END;
+GO

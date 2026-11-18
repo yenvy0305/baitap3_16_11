@@ -9,6 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Users", schema = "dbo")
@@ -59,6 +62,9 @@ public class User implements Serializable {
 
     @Column(name = "resetExpiresAt")
     private Timestamp resetExpiresAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Video> videos = new ArrayList<>();
 
     public User() {
     }
@@ -173,5 +179,13 @@ public class User implements Serializable {
 
     public void setResetExpiresAt(Timestamp resetExpiresAt) {
         this.resetExpiresAt = resetExpiresAt;
+    }
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
 }

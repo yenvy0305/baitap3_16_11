@@ -18,7 +18,7 @@ public final class MailService {
     public static void sendOtp(String recipient, String purpose, String otp) {
     	String host = required("MAIL_HOST");
     	String username = required("MAIL_USERNAME");
-    	String password = required("MAIL_PASSWORD");
+        String password = required("MAIL_PASSWORD");
     	String from = env("MAIL_FROM", username);
     	String port = env("MAIL_PORT", "587");
 

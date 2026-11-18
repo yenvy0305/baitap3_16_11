@@ -100,7 +100,7 @@ public class LoginController extends HttpServlet {
         } else if (user.getRoleid() == 2) {
             resp.sendRedirect(req.getContextPath() + "/manager/home");
         } else {
-            req.getRequestDispatcher("/views/home.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/home");
         }
     }
 }
