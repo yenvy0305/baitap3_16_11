@@ -4,6 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Đăng nhập</title>
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/style.css">
@@ -26,13 +27,14 @@
         <div class="alert">${alert}</div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form class="needs-validation" action="${pageContext.request.contextPath}/login" method="post">
         <label for="username">Tài khoản</label>
         <input id="username" name="username"
-               value="${rememberedUsername}" required>
+               value="${rememberedUsername}" minlength="3" maxlength="100"
+               pattern="[A-Za-z0-9._-]{3,100}" required>
 
         <label for="password">Mật khẩu</label>
-        <input id="password" name="password" type="password" required>
+        <input id="password" name="password" type="password" maxlength="128" required>
 
         <div style="display:flex; align-items:center; justify-content:flex-start; gap:8px; margin:14px 0 20px;">
     		<input id="remember"
@@ -46,7 +48,7 @@
     		</label>
 		</div>
 
-        <button type="submit">Đăng nhập</button>
+        <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
     </form>
 
     <p><a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a></p>

@@ -30,7 +30,10 @@ BEGIN
         activationCodeHash NVARCHAR(255) NULL,
         activationExpiresAt DATETIME2 NULL,
         resetCodeHash NVARCHAR(255) NULL,
-        resetExpiresAt DATETIME2 NULL
+        resetExpiresAt DATETIME2 NULL,
+        profilePendingEmail NVARCHAR(255) NULL,
+        profileEmailOtpHash NVARCHAR(255) NULL,
+        profileEmailOtpExpiresAt DATETIME2 NULL
     );
 END;
 GO
@@ -52,6 +55,15 @@ GO
 IF COL_LENGTH(N'dbo.Users', N'resetExpiresAt') IS NULL
     ALTER TABLE dbo.Users ADD resetExpiresAt DATETIME2 NULL;
 GO
+IF COL_LENGTH(N'dbo.Users', N'profilePendingEmail') IS NULL
+    ALTER TABLE dbo.Users ADD profilePendingEmail NVARCHAR(255) NULL;
+GO
+IF COL_LENGTH(N'dbo.Users', N'profileEmailOtpHash') IS NULL
+    ALTER TABLE dbo.Users ADD profileEmailOtpHash NVARCHAR(255) NULL;
+GO
+IF COL_LENGTH(N'dbo.Users', N'profileEmailOtpExpiresAt') IS NULL
+    ALTER TABLE dbo.Users ADD profileEmailOtpExpiresAt DATETIME2 NULL;
+GO
 
 UPDATE dbo.Users
 SET roleid = 1
@@ -72,3 +84,5 @@ BEGIN
     );
 END;
 GO
+
+

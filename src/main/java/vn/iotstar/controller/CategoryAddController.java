@@ -28,17 +28,25 @@ public class CategoryAddController extends HttpServlet {
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
-        Category category = new Category();
-        category.setCateName(req.getParameter("cateName").trim());
-        category.setIcon(UploadUtil.saveImage(req.getPart("icon")));
-
-        if (category.getCateName().isBlank()) {
-            req.setAttribute("alert", "Tên danh mục không được để trống.");
+        String name = req.getParameter("cateName");
+        name = name == null ? "" : name.trim();
+        if (name.isBlank() || name.length() > 255) {
+            req.setAttribute("alert", "Tên danh mục không được để trống và tối đa 255 ký tự.");
             req.getRequestDispatcher("/views/admin/add-category.jsp")
                .forward(req, resp);
             return;
         }
 
+        Category category = new Category();
+        category.setCateName(name);
+        try {
+            category.setIcon(UploadUtil.saveImage(req.getPart("icon")));
+        } catch (IOException e) {
+            req.setAttribute("alert", e.getMessage());
+            req.getRequestDispatcher("/views/admin/add-category.jsp")
+               .forward(req, resp);
+            return;
+        }
         service.insert(category);
         resp.sendRedirect(req.getContextPath() + "/admin/category/list");
     }

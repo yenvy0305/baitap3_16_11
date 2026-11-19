@@ -4,6 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Thêm danh mục</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
@@ -11,13 +12,13 @@
 <%@ include file="_top.jspf" %>
 <h1>Thêm danh mục mới</h1>
 <c:if test="${not empty alert}"><div class="alert">${alert}</div></c:if>
-<form class="form-card" action="${pageContext.request.contextPath}/admin/category/add"
+<form class="form-card needs-validation" action="${pageContext.request.contextPath}/admin/category/add"
       method="post" enctype="multipart/form-data">
     <label>Tên danh mục</label>
-    <input name="cateName" required>
+    <input class="form-control" name="cateName" maxlength="255" value="<c:out value='${param.cateName}'/>" required>
     <label>Ảnh đại diện</label>
-    <input type="file" name="icon" accept="image/*">
-    <button type="submit">Thêm</button>
+    <input class="form-control" type="file" name="icon" accept="image/jpeg,image/png,image/webp">
+    <button class="btn btn-primary" type="submit">Thêm</button>
     <a class="button secondary" href="${pageContext.request.contextPath}/admin/category/list">Hủy</a>
 </form>
 <%@ include file="_bottom.jspf" %>

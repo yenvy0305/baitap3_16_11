@@ -4,6 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Quản lý danh mục</title>
     <link rel="stylesheet"
           href="${pageContext.request.contextPath}/assets/css/style.css">

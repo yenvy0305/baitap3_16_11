@@ -108,6 +108,67 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public User findById(int id) {
+        return dao.findById(id);
+    }
+
+    @Override
+    public boolean isEmailAvailable(String email, int currentUserId) {
+        User existing = dao.findByEmail(email);
+        return existing == null || existing.getId() == currentUserId;
+    }
+
+    @Override
+    public void updateProfile(User user) {
+        dao.update(user);
+    }
+
+    @Override
+    public void requestProfileEmailChange(int userId, String newEmail) {
+        User user = dao.findById(userId);
+        if (user == null || !isEmailAvailable(newEmail, userId)) {
+            throw new IllegalArgumentException("Email này đã được tài khoản khác sử dụng.");
+        }
+        if (newEmail.equalsIgnoreCase(user.getEmail())) return;
+
+        String otp = OtpUtil.generate();
+        user.setProfilePendingEmail(newEmail);
+        user.setProfileEmailOtpHash(PasswordUtil.hash(otp));
+        user.setProfileEmailOtpExpiresAt(expiry());
+        dao.update(user);
+        MailService.sendOtp(newEmail, "xác nhận thay đổi email", otp);
+    }
+
+    @Override
+    public boolean verifyProfileEmailChange(int userId, String otp) {
+        User user = dao.findById(userId);
+        if (user == null || user.getProfilePendingEmail() == null
+                || !isValidOtp(otp, user.getProfileEmailOtpHash(),
+                        user.getProfileEmailOtpExpiresAt())
+                || !isEmailAvailable(user.getProfilePendingEmail(), userId)) {
+            return false;
+        }
+        user.setEmail(user.getProfilePendingEmail());
+        user.setProfilePendingEmail(null);
+        user.setProfileEmailOtpHash(null);
+        user.setProfileEmailOtpExpiresAt(null);
+        dao.update(user);
+        return true;
+    }
+
+    @Override
+    public void resendProfileEmailOtp(int userId) {
+        User user = dao.findById(userId);
+        if (user == null || user.getProfilePendingEmail() == null) return;
+        String otp = OtpUtil.generate();
+        user.setProfileEmailOtpHash(PasswordUtil.hash(otp));
+        user.setProfileEmailOtpExpiresAt(expiry());
+        dao.update(user);
+        MailService.sendOtp(user.getProfilePendingEmail(),
+                "xác nhận thay đổi email", otp);
+    }
+
     private Timestamp expiry() {
         return Timestamp.from(Instant.now().plusSeconds(OTP_VALIDITY_MINUTES * 60));
     }

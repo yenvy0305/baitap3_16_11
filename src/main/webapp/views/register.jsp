@@ -4,6 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Đăng ký</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
@@ -13,18 +14,19 @@
     <c:if test="${not empty alert}">
         <div class="alert">${alert}</div>
     </c:if>
-    <form action="${pageContext.request.contextPath}/register" method="post">
+    <form class="needs-validation" action="${pageContext.request.contextPath}/register" method="post">
         <label>Email</label>
-        <input type="email" name="email" required>
+        <input class="form-control" type="email" name="email" maxlength="255" value="<c:out value='${param.email}'/>" required>
         <label>Tài khoản</label>
-        <input name="username" required>
+        <input class="form-control" name="username" minlength="3" maxlength="100" value="<c:out value='${param.username}'/>"
+               pattern="[A-Za-z0-9._-]{3,100}" required>
         <label>Họ tên</label>
-        <input name="fullname" required>
+        <input class="form-control" name="fullname" maxlength="255" value="<c:out value='${param.fullname}'/>" required>
         <label>Số điện thoại</label>
-        <input name="phone">
+        <input class="form-control" name="phone" pattern="[0-9+() .-]{7,30}" maxlength="30" value="<c:out value='${param.phone}'/>">
         <label>Mật khẩu</label>
-        <input type="password" name="password" minlength="8" required>
-        <button type="submit">Đăng ký</button>
+        <input class="form-control" type="password" name="password" minlength="8" maxlength="128" required>
+        <button class="btn btn-primary w-100" type="submit">Đăng ký</button>
     </form>
     <p>Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>
 </div>

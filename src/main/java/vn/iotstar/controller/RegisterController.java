@@ -9,6 +9,7 @@ import jakarta.servlet.http.*;
 import vn.iotstar.model.User;
 import vn.iotstar.service.UserService;
 import vn.iotstar.service.impl.UserServiceImpl;
+import vn.iotstar.util.FormValidation;
 
 @WebServlet("/register")
 public class RegisterController extends HttpServlet {
@@ -32,14 +33,20 @@ public class RegisterController extends HttpServlet {
         user.setPassword(value(req, "password"));
         user.setPhone(value(req, "phone").trim());
 
-        if (user.getEmail().isBlank() || user.getUsername().isBlank()
-                || user.getFullname().isBlank() || user.getPassword().isBlank()) {
-            req.setAttribute("alert", "Vui lòng điền các thông tin bắt buộc.");
-            req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
-            return;
+        String validationMessage = null;
+        if (!FormValidation.validEmail(user.getEmail())) {
+            validationMessage = "Email không hợp lệ.";
+        } else if (!FormValidation.validUsername(user.getUsername())) {
+            validationMessage = "Tài khoản dài 3–100 ký tự, chỉ gồm chữ, số, dấu chấm, gạch dưới hoặc gạch ngang.";
+        } else if (user.getFullname().isBlank() || user.getFullname().length() > 255) {
+            validationMessage = "Họ tên không được trống và tối đa 255 ký tự.";
+        } else if (!FormValidation.validPhone(user.getPhone())) {
+            validationMessage = "Số điện thoại không hợp lệ.";
+        } else if (user.getPassword().length() < 8 || user.getPassword().length() > 128) {
+            validationMessage = "Mật khẩu phải dài từ 8 đến 128 ký tự.";
         }
-        if (user.getPassword().length() < 8) {
-            req.setAttribute("alert", "Mật khẩu cần có ít nhất 8 ký tự.");
+        if (validationMessage != null) {
+            req.setAttribute("alert", validationMessage);
             req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
             return;
         }

@@ -63,6 +63,15 @@ public class User implements Serializable {
     @Column(name = "resetExpiresAt")
     private Timestamp resetExpiresAt;
 
+    @Column(name = "profilePendingEmail", length = 255)
+    private String profilePendingEmail;
+
+    @Column(name = "profileEmailOtpHash", length = 255)
+    private String profileEmailOtpHash;
+
+    @Column(name = "profileEmailOtpExpiresAt")
+    private Timestamp profileEmailOtpExpiresAt;
+
     @OneToMany(mappedBy = "user")
     private List<Video> videos = new ArrayList<>();
 
@@ -179,6 +188,30 @@ public class User implements Serializable {
 
     public void setResetExpiresAt(Timestamp resetExpiresAt) {
         this.resetExpiresAt = resetExpiresAt;
+    }
+
+    public String getProfilePendingEmail() {
+        return profilePendingEmail;
+    }
+
+    public void setProfilePendingEmail(String profilePendingEmail) {
+        this.profilePendingEmail = profilePendingEmail;
+    }
+
+    public String getProfileEmailOtpHash() {
+        return profileEmailOtpHash;
+    }
+
+    public void setProfileEmailOtpHash(String profileEmailOtpHash) {
+        this.profileEmailOtpHash = profileEmailOtpHash;
+    }
+
+    public Timestamp getProfileEmailOtpExpiresAt() {
+        return profileEmailOtpExpiresAt;
+    }
+
+    public void setProfileEmailOtpExpiresAt(Timestamp profileEmailOtpExpiresAt) {
+        this.profileEmailOtpExpiresAt = profileEmailOtpExpiresAt;
     }
 
     public List<Video> getVideos() {

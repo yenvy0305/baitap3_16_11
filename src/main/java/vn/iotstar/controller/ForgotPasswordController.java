@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import vn.iotstar.service.UserService;
 import vn.iotstar.service.impl.UserServiceImpl;
+import vn.iotstar.util.FormValidation;
 
 @WebServlet("/forgot-password")
 public class ForgotPasswordController extends HttpServlet {
@@ -29,6 +30,11 @@ public class ForgotPasswordController extends HttpServlet {
         req.setAttribute("email", email);
 
         if ("request".equals(req.getParameter("action"))) {
+            if (!FormValidation.validEmail(email)) {
+                req.setAttribute("alert", "Email không hợp lệ.");
+                req.getRequestDispatcher("/views/forgot-password.jsp").forward(req, resp);
+                return;
+            }
             try {
                 service.requestPasswordReset(email);
                 req.setAttribute("step", "verify");
@@ -42,8 +48,12 @@ public class ForgotPasswordController extends HttpServlet {
             String password = value(req, "newPassword");
             String confirm = value(req, "confirmPassword");
             req.setAttribute("step", "verify");
-            if (password.length() < 8) {
-                req.setAttribute("alert", "Mật khẩu mới cần ít nhất 8 ký tự.");
+            if (!FormValidation.validEmail(email)) {
+                req.setAttribute("alert", "Email không hợp lệ.");
+            } else if (!value(req, "otp").trim().matches("[0-9]{6}")) {
+                req.setAttribute("alert", "OTP phải gồm đúng 6 chữ số.");
+            } else if (password.length() < 8 || password.length() > 128) {
+                req.setAttribute("alert", "Mật khẩu mới phải dài từ 8 đến 128 ký tự.");
             } else if (!password.equals(confirm)) {
                 req.setAttribute("alert", "Hai mật khẩu không trùng nhau.");
             } else if (service.resetPassword(email, value(req, "otp").trim(), password)) {

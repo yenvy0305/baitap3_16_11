@@ -1,0 +1,7 @@
+<sitemesh>
+    <mapping path="/assets/*" exclude="true"/>
+    <mapping path="/image" exclude="true"/>
+    <mapping path="/video/file" exclude="true"/>
+    <mapping path="/admin/*" exclude="true"/>
+    <mapping decorator="bootstrap.html"/>
+</sitemesh>

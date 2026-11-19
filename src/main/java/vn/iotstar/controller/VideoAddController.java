@@ -37,8 +37,18 @@ public class VideoAddController extends VideoControllerSupport {
         req.setCharacterEncoding("UTF-8");
 
         String title = parameter(req, "title").trim();
-        if (title.isBlank()) {
-            req.setAttribute("alert", "Tiêu đề video không được để trống.");
+        String description = parameter(req, "description").trim();
+        if (title.isBlank() || title.length() > 255) {
+            req.setAttribute("alert", "Tiêu đề video không được để trống và tối đa 255 ký tự.");
+            req.setAttribute("title", title);
+            req.setAttribute("description", description);
+            req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
+            return;
+        }
+        if (description.length() > 4000) {
+            req.setAttribute("alert", "Mô tả tối đa 4000 ký tự.");
+            req.setAttribute("title", title);
+            req.setAttribute("description", description);
             req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
             return;
         }
@@ -49,13 +59,15 @@ public class VideoAddController extends VideoControllerSupport {
             savedFile = UploadUtil.saveVideo(file);
             if (savedFile == null) {
                 req.setAttribute("alert", "Vui lòng chọn file video.");
+                req.setAttribute("title", title);
+                req.setAttribute("description", description);
                 req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
                 return;
             }
 
             Video video = new Video();
             video.setTitle(title);
-            video.setDescription(parameter(req, "description").trim());
+            video.setDescription(description);
             video.setFileName(savedFile);
             video.setMimeType(UploadUtil.videoMimeType(savedFile));
             video.setCreatedAt(new Timestamp(System.currentTimeMillis()));
@@ -66,6 +78,8 @@ public class VideoAddController extends VideoControllerSupport {
             getServletContext().log("Không tải được video lên.", e);
             req.setAttribute("alert", e.getMessage() == null
                     ? "Không thể tải video. Kiểm tra dung lượng file." : e.getMessage());
+            req.setAttribute("title", title);
+            req.setAttribute("description", description);
             req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
         }
     }

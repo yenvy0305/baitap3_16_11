@@ -19,7 +19,11 @@ public class CategoryEditController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
+        int id = parseId(req.getParameter("id"));
+        if (id < 1) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         Category category = service.get(id);
         if (category == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -34,7 +38,11 @@ public class CategoryEditController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        int id = Integer.parseInt(req.getParameter("cateId"));
+        int id = parseId(req.getParameter("cateId"));
+        if (id < 1) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         Category category = service.get(id);
         if (category == null) {
@@ -42,11 +50,37 @@ public class CategoryEditController extends HttpServlet {
             return;
         }
 
-        category.setCateName(req.getParameter("cateName").trim());
-        String newImage = UploadUtil.saveImage(req.getPart("icon"));
-        if (newImage != null) category.setIcon(newImage);
+        String name = req.getParameter("cateName");
+        name = name == null ? "" : name.trim();
+        if (name.isBlank() || name.length() > 255) {
+            req.setAttribute("alert", "Tên danh mục không được để trống và tối đa 255 ký tự.");
+            req.setAttribute("category", category);
+            req.getRequestDispatcher("/views/admin/edit-category.jsp")
+               .forward(req, resp);
+            return;
+        }
+
+        category.setCateName(name);
+        try {
+            String newImage = UploadUtil.saveImage(req.getPart("icon"));
+            if (newImage != null) category.setIcon(newImage);
+        } catch (IOException e) {
+            req.setAttribute("alert", e.getMessage());
+            req.setAttribute("category", category);
+            req.getRequestDispatcher("/views/admin/edit-category.jsp")
+               .forward(req, resp);
+            return;
+        }
 
         service.edit(category);
         resp.sendRedirect(req.getContextPath() + "/admin/category/list");
+    }
+
+    private int parseId(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (RuntimeException e) {
+            return -1;
+        }
     }
 }

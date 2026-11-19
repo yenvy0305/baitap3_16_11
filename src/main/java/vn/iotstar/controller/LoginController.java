@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import vn.iotstar.model.User;
 import vn.iotstar.service.UserService;
 import vn.iotstar.service.impl.UserServiceImpl;
+import vn.iotstar.util.FormValidation;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -53,9 +54,9 @@ public class LoginController extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        if (username == null || username.isBlank()
-                || password == null || password.isBlank()) {
-            req.setAttribute("alert", "Vui lòng nhập tài khoản và mật khẩu.");
+        if (!FormValidation.validUsername(username == null ? null : username.trim())
+                || password == null || password.isBlank() || password.length() > 128) {
+            req.setAttribute("alert", "Nhập tài khoản hợp lệ và mật khẩu từ 1 đến 128 ký tự.");
             req.setAttribute("rememberedUsername", username);
             req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
             return;

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import vn.iotstar.service.UserService;
 import vn.iotstar.service.impl.UserServiceImpl;
+import vn.iotstar.util.FormValidation;
 
 @WebServlet("/activate")
 public class ActivationController extends HttpServlet {
@@ -32,8 +33,16 @@ public class ActivationController extends HttpServlet {
 
         try {
             if ("resend".equals(req.getParameter("action"))) {
+                if (!FormValidation.validEmail(email)) {
+                    req.setAttribute("alert", "Email không hợp lệ.");
+                    req.getRequestDispatcher("/views/activate.jsp").forward(req, resp);
+                    return;
+                }
                 service.sendActivationOtp(email);
                 req.setAttribute("message", "Nếu tài khoản chưa kích hoạt, OTP mới đã được gửi.");
+            } else if (!FormValidation.validEmail(email)
+                    || !value(req, "otp").trim().matches("[0-9]{6}")) {
+                req.setAttribute("alert", "Email hoặc OTP 6 chữ số không hợp lệ.");
             } else if (service.activate(email, value(req, "otp").trim())) {
                 req.getSession().removeAttribute("activationEmail");
                 resp.sendRedirect(req.getContextPath() + "/login?activated=1");

@@ -4,6 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Kích hoạt tài khoản</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
@@ -17,13 +18,13 @@
     <c:if test="${not empty message}"><div class="success">${message}</div></c:if>
     <c:if test="${not empty alert}"><div class="alert">${alert}</div></c:if>
 
-    <form action="${pageContext.request.contextPath}/activate" method="post">
+    <form class="needs-validation" action="${pageContext.request.contextPath}/activate" method="post">
         <label for="email">Email</label>
         <input id="email" type="email" name="email" value="<c:out value='${email}'/>" required>
         <label for="otp">Mã OTP</label>
-        <input id="otp" name="otp" inputmode="numeric" pattern="[0-9]{6}" maxlength="6">
+        <input id="otp" name="otp" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" required>
         <button type="submit" name="action" value="activate">Kích hoạt</button>
-        <button type="submit" name="action" value="resend">Gửi lại OTP</button>
+        <button type="submit" name="action" value="resend" formnovalidate>Gửi lại OTP</button>
     </form>
     <p><a href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a></p>
 </div>

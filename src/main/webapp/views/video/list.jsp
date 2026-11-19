@@ -5,18 +5,11 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <base href="${pageContext.request.contextPath}/">
     <title>Video của tôi</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
-<header class="topbar">
-    <strong><a href="${pageContext.request.contextPath}/home">VideoHub</a></strong>
-    <span>Xin chào <c:out value="${sessionScope.account.fullname}"/></span>
-    <nav>
-        <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-        <a href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
-    </nav>
-</header>
 <main class="content video-page">
     <div class="video-heading">
         <div>

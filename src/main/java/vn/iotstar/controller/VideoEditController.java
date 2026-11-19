@@ -50,8 +50,9 @@ public class VideoEditController extends VideoControllerSupport {
         }
 
         String title = parameter(req, "title").trim();
-        if (title.isBlank()) {
-            req.setAttribute("alert", "Tiêu đề video không được để trống.");
+        if (title.isBlank() || title.length() > 255) {
+            req.setAttribute("alert", "Tiêu đề video không được để trống và tối đa 255 ký tự.");
+            video.setTitle(title);
             req.setAttribute("video", video);
             req.setAttribute("editing", true);
             req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
@@ -61,6 +62,16 @@ public class VideoEditController extends VideoControllerSupport {
         String oldFile = video.getFileName();
         String newFile = null;
         try {
+            String description = parameter(req, "description").trim();
+            if (description.length() > 4000) {
+                req.setAttribute("alert", "Mô tả tối đa 4000 ký tự.");
+                video.setTitle(title);
+                video.setDescription(description);
+                req.setAttribute("video", video);
+                req.setAttribute("editing", true);
+                req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);
+                return;
+            }
             Part file = req.getPart("videoFile");
             if (file != null && file.getSize() > 0) {
                 newFile = UploadUtil.saveVideo(file);
@@ -68,7 +79,7 @@ public class VideoEditController extends VideoControllerSupport {
                 video.setMimeType(UploadUtil.videoMimeType(newFile));
             }
             video.setTitle(title);
-            video.setDescription(parameter(req, "description").trim());
+            video.setDescription(description);
             service.edit(video);
             if (newFile != null) {
                 try {
@@ -83,6 +94,7 @@ public class VideoEditController extends VideoControllerSupport {
             getServletContext().log("Không cập nhật được video.", e);
             req.setAttribute("alert", e.getMessage() == null
                     ? "Không thể cập nhật video. Kiểm tra dung lượng file." : e.getMessage());
+            video.setTitle(title);
             req.setAttribute("video", video);
             req.setAttribute("editing", true);
             req.getRequestDispatcher("/views/video/form.jsp").forward(req, resp);

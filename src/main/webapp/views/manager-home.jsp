@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
-<head><meta charset="UTF-8"><title>Manager</title></head>
+<head><meta charset="UTF-8"><base href="${pageContext.request.contextPath}/"><title>Manager</title></head>
 <body>
     <h1>Xin chào ${sessionScope.account.fullname}</h1>
     <p>Bạn đã đăng nhập với quyền manager.</p>
